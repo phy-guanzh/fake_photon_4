@@ -1,0 +1,26 @@
+import FWCore.ParameterSet.Config as cms
+
+process = cms.Process("photonAnalyzer")
+
+process.load("FWCore.MessageService.MessageLogger_cfi")
+
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+
+process.source = cms.Source("PoolSource",
+    # replace 'myfile.root' with the source file you want to use
+    fileNames = cms.untracked.vstring(
+       # 'file:/afs/cern.ch/work/z/zguan/EZ/CMSSW_10_2_18/src/ZGv3.root'
+        'file:/afs/cern.ch/work/z/zguan/EZ/CMSSW_10_2_18/src/DY1.root'
+    )
+)
+
+process.demo = cms.EDAnalyzer('photonAnalyzer',
+		 Photons =  cms.InputTag("slimmedPhotons"),
+		 rho = cms.InputTag("fixedGridRhoFastjetAll"),
+		 genSrc =  cms.InputTag("prunedGenParticles"),
+)
+
+
+process.p = cms.Path(process.demo)
+
+process.TFileService = cms.Service("TFileService",fileName = cms.string("test3.root"))
